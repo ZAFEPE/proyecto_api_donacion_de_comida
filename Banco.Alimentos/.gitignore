@@ -1,0 +1,11 @@
+# Carpetas de compilación (No se suben porque se generan solas al compilar)
+[Bb]in/
+[Oo]bj/
+
+# Configuraciones de editores de código
+.vs/
+.vscode/
+
+# Configuración de desarrollo local con credenciales
+appsettings.Development.json
+appsettings.json

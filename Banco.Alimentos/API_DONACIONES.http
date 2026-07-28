@@ -1,0 +1,6 @@
+@API_DONACIONES_HostAddress = http://localhost:5106
+
+GET {{API_DONACIONES_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
