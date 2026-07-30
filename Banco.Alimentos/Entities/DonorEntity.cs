@@ -1,16 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace BancoAlimentos.Entities
 {
     public class DonorEntity : BaseEntityProyect
     {
-        public string? TipoDeDonante { get; set; } // Categoría: Particular, Supermercado, Restaurante, Empresa, ONG.
-        public string? Nombre { get; set; } // nombre del donante
+        [Column("donor_type")]
+        public string? DonorType { get; set; } // Categoría: Particular, Supermercado, Restaurante, Empresa, ONG.
+        [Column("Name")]
+        public string? Name { get; set; } // nombre del donante
+        [Column("dni")]
         public string? DNI { get; set; } // Numero de identidad asociado al donante
-        public string? NumeroDeContacto { get; set; } // numero de telefono para contactar al donante.
-        public string? CorreoElectronico { get; set; } // ps un correo obvio 
+        [Column("contact_number")]
+        public string? ContactNumber { get; set; } // numero de telefono para contactar al donante.
+        [Column("email")]
+        public string? Email { get; set; } // ps un correo obvio 
     }
 }

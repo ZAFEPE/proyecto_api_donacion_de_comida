@@ -1,3 +1,4 @@
+using BancoAlimentos.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_DONACIONES.DataBase
@@ -9,7 +10,8 @@ namespace API_DONACIONES.DataBase
             
         }
 
-        // public DbSet<CategoryEntity> Categories { get; set; }
+        public DbSet<DonationEntity> Donations { get; set; }
+        public DbSet<DonorEntity> Donators { get; set; }
         /*Un DbSet representa una tabla completa dentro de tu base de datos.
 
         <CategoryEntity>: Le dice a Entity Framework cuál es el molde (las columnas) que va a tener esa tabla.
