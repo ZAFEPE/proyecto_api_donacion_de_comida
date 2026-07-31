@@ -15,5 +15,7 @@ namespace API_DONACIONES.Entities
         public string? ContactNumber { get; set; } // numero de telefono para contactar al donante.
         [Column("email")]
         public string? Email { get; set; } // ps un correo obvio 
+        public ICollection<DonationEntity> Donations { get; set; }
+        = new List<DonationEntity>();
     }
 }
