@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace API_DONACIONES.Dtos
 {
-    public class ResponseCategoryDto
+    public class ResponseDonorDto
     {
         public string? Id {get; set;}
     }

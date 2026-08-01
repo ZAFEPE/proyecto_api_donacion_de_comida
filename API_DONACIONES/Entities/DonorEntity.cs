@@ -6,16 +6,16 @@ namespace API_DONACIONES.Entities
     public class DonorEntity : BaseEntityProyect
     {
         [Column("donor_type")]
-        public string? DonorType { get; set; } // Categoría: Particular, Supermercado, Restaurante, Empresa, ONG.
+        public string? DonorType {get;set;}//escribale ahi tipooo, persona, organizacion y asiS
         [Column("Name")]
-        public string? Name { get; set; } // nombre del donante
+        public string? Name {get;set;}
         [Column("dni")]
-        public string? DNI { get; set; } // Numero de identidad asociado al donante
+        public string? DNI {get;set;}
         [Column("contact_number")]
-        public string? ContactNumber { get; set; } // numero de telefono para contactar al donante.
+        public string? ContactNumber {get;set;}
         [Column("email")]
-        public string? Email { get; set; } // ps un correo obvio 
-        public ICollection<DonationEntity> Donations { get; set; }
+        public string? Email {get;set;} 
+        public ICollection<DonationEntity> Donations {get;set;}
         = new List<DonationEntity>();
     }
 }

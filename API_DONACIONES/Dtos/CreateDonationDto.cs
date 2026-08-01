@@ -17,6 +17,8 @@ namespace API_DONACIONES.Dtos
 
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")]
         public int Quantity { get; set; }
+        [Required(ErrorMessage = "Debe introducir si nesesita o no refrigeracion" )]
+        public bool NeedsRefrigeration {get;set;}
         public DateTime? ExpirationDate { get; set; }
     }
 }

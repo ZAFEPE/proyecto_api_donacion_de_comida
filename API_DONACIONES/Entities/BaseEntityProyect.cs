@@ -6,7 +6,7 @@ namespace API_DONACIONES.Entities
     {
          [Key]
         [Column("id")]
-        public Guid Id { get; set; }
+        public string? Id { get; set; }
 
         [Column("created_by_id")]
         public string? CreatedById {get; set;}

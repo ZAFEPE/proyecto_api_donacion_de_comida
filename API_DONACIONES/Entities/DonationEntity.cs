@@ -5,19 +5,19 @@ namespace API_DONACIONES.Entities
     public class DonationEntity : BaseEntityProyect
     {
         [Column("donor_id")]
-       public Guid DonorId { get; set; }//id_donante	Clave foránea (FK)	Enlace con el id_donante de la tabla anterior. No me acorde como se hacia esto, Herencia de alguna forma supongo pero no se \(#o#)/
+        public string? DonorId {get;set;}
         [Column("DonationDate")]
-        public DonorEntity? Donor { get; set; }
-        public DateTime DonationDate { get; set; }// fecha cuando se hizo la donacion
+        public DonorEntity? Donor {get;set;}// est0 representa todo donor Entity waos
+        public DateTime DonationDate {get;set;}
         [Column("type_food")]
-        public string? TypeFood { get; set; }//Clasificación: Perecedero, No perecedero, Enlatados, Frescos, Bebidas.
+        public string? TypeFood {get;set;}
         [Column("description")]
-        public string? Description { get; set; }
+        public string? Description {get;set;}
         [Column("quantity")]
-        public int Quantity { get; set; }
+        public int Quantity {get;set;}
         [Column("needs_refrigeration")]
-        public bool NeedsRefrigeration { get; set; } // pos eso si necesita refrigeracion.
+        public bool NeedsRefrigeration {get;set;}
         [Column("expiration_date")]
-        public DateTime? ExpirationDate { get; set; }
+        public DateTime? ExpirationDate {get;set;}
     }
 }
