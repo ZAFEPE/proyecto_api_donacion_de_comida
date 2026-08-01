@@ -17,19 +17,19 @@ namespace API_DONACIONES.Services
         {
             _contextD = context;//context se crea en Dbcontext 
         }
-        public async Task<ResponseDto<DonorDto>> GetOneByIdDonorAsync(string id)
+        public async Task<ResponseDto<DonationDto>> GetOneByIdDonorAsync(string id)
         {
-            var donationEntity = await _contextD.Donors.FirstOrDefaultAsync(d => d.Id == id);//el donors es el que declaramos en dbcontext
+            var donationEntity = await _contextD.Donations.FirstOrDefaultAsync(d => d.Id == id);//el donors es el que declaramos en dbcontext
             if (donationEntity is null)
             {
-                return new ResponseDto<DonorDto>
+                return new ResponseDto<DonationDto>
                 {
                     Status = false,
                     Message = "el donante no se ncontrado",
                     StatusCode = HttpStatusCodess.NOT_FOUND
                 };
             }
-            return new ResponseDto<DonorDto>
+            return new ResponseDto<DonationDto>
             {
                 StatusCode = HttpStatusCodess.OK,
                 Status = true,
@@ -37,20 +37,20 @@ namespace API_DONACIONES.Services
                 Data = MappersDonaciones.EntitytoDtoDonation(donationEntity)//?tambien cambair esto
             };
         }
-        public async Task<ResponseDto<ResponseDonorDto>> CreateDonorAsync(CreateDonationDto dto)
+        public async Task<ResponseDto<ResponseDonorDto>> CreateDonationAsync(CreateDonationDto dto,string donorId)
         {
-            var DonorRegistrado = await _contextD.Donors
-            .FirstOrDefaultAsync(c => c.Name == dto.Name);
-            if (DonorRegistrado is not null)
+            var DonationRegistrado = await _contextD.Donations
+            .FirstOrDefaultAsync(c => c.NameFood == dto.NameFood);
+            if (DonationRegistrado is not null)
             {
                 return new ResponseDto<ResponseDonorDto>
                 {
                     StatusCode = HttpStatusCodess.BAD_REQUEST,
                     Status = false,
-                    Message = $"La categorìa {dto.Name} ya se encuentra registrada."
+                    Message = $"La categorìa {dto.NameFood} ya se encuentra registrada."
                 };
             }
-            DonationEntity entity = MappersDonaciones.CreateMapperDonation(dto);//? error raro
+            DonationEntity entity = MappersDonaciones.CreateMapperDonation(dto,donorId);//? error raro
             _contextD.Donations.Add(entity);
             await _contextD.SaveChangesAsync();
             return new ResponseDto<ResponseDonorDto>//esto tambien hay que verlo+

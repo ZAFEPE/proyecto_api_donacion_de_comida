@@ -4,16 +4,14 @@ namespace API_DONACIONES.Dtos
 {
    public class CreateDonationDto
     {
-        [Required(ErrorMessage = "El ID del donante es obligatorio")]
-        public string? DonorId { get;set;} 
-
-        [Required(ErrorMessage = "tipo de comida requerida")]
+        [Required(ErrorMessage = "es nesesario que introduzca el nombre de la comida")]
         [StringLength(100, ErrorMessage = "No puede superar los 100 caracteres")]
-        public string? TypeFood { get; set; }
+        public string? NameFood { get; set; }
+        public DateTime DonationDate{get; set;}
 
         [Required(ErrorMessage = "La descripción del alimento es obligatoria")]
         [StringLength(100, ErrorMessage = "La descripción no puede superar los 100 caracteres")]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } 
 
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")]
         public int Quantity { get; set; }

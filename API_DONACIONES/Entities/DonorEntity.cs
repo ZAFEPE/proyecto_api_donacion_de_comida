@@ -15,7 +15,5 @@ namespace API_DONACIONES.Entities
         public string? ContactNumber {get;set;}
         [Column("email")]
         public string? Email {get;set;} 
-        public ICollection<DonationEntity> Donations {get;set;}
-        = new List<DonationEntity>();
     }
 }

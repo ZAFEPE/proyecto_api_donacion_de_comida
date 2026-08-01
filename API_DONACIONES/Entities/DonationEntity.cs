@@ -8,9 +8,10 @@ namespace API_DONACIONES.Entities
         public string? DonorId {get;set;}
         [Column("DonationDate")]
         public DonorEntity? Donor {get;set;}// est0 representa todo donor Entity waos
+        [Column("donation_date")]
         public DateTime DonationDate {get;set;}
         [Column("type_food")]
-        public string? TypeFood {get;set;}
+        public string? NameFood {get;set;}
         [Column("description")]
         public string? Description {get;set;}
         [Column("quantity")]

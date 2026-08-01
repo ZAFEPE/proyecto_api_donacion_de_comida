@@ -12,12 +12,13 @@ namespace API_DONACIONES.Mappers
         {
             return new DonorEntity
             {
-                Id = Guid.NewGuid().ToString(), 
+                Id = Guid.NewGuid().ToString(),
+                DonorType = dto.DonorType,
                 Name = dto.Name,
-                Email = dto.Email,
-                ContactNumber = dto.ContactNumber
+                DNI = dto.DNI,
+                ContactNumber = dto.ContactNumber,
+                Email = dto.Email
             };
-     
         }
         public static DonorDto EntitytoDtoDonor(DonorEntity convertir)
         {
@@ -27,25 +28,39 @@ namespace API_DONACIONES.Mappers
                 DonorType = convertir.DonorType,
                 Name = convertir.Name,
                 DNI = convertir.DNI,
-                Email = convertir.Email,
-                ContactNumber = convertir.ContactNumber
+                ContactNumber = convertir.ContactNumber,
+                Email = convertir.Email
           };
         }
 
 
-        public static DonationEntity  CreateMapperDonation(CreateDonationDto dto)
+        public static DonationEntity  CreateMapperDonation(CreateDonationDto dto,string donorId)
         {
             return new DonationEntity
             {
                 Id = Guid.NewGuid().ToString(), 
-                DonorId = Guid.NewGuid().ToString(),
+                DonorId = donorId,
                 DonationDate = DateTime.Now,
-                TypeFood = dto.TypeFood,
+                NameFood = dto.NameFood,
                 Description = dto.Description,
                 Quantity = dto.Quantity,
                 NeedsRefrigeration = dto.NeedsRefrigeration,
                 ExpirationDate = dto.ExpirationDate
             };
+        }
+
+        public static DonationDto EntitytoDtoDonation(DonationEntity convertir)
+        {
+            return new DonationDto
+          {
+                Id = convertir.Id,
+                DonorId = convertir.DonorId,
+                DonationDate = convertir.DonationDate,
+                NameFood = convertir.NameFood,
+                Description = convertir.Description,
+                Quantity = convertir.Quantity,
+                NeedsRefrigeration = convertir.NeedsRefrigeration
+          };
         }
     }
 }
