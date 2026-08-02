@@ -73,5 +73,30 @@ namespace API_DONACIONES.Services
                 Data = resultDto
             };
         } 
+        public async Task<ResponseDto<DonationDto>> GetByDonorIdAsync(string donorId)
+        {
+            var donationEntity = await _contextD.Donations
+                .FirstOrDefaultAsync(d => d.DonorId == donorId);
+
+            if (donationEntity is null)
+            {
+                return new ResponseDto<DonationDto>
+                {
+                    Status = false,
+                    Message = "No se encontró donación para este donante",
+                    StatusCode = HttpStatusCodess.NOT_FOUND
+                };
+            }
+
+            return new ResponseDto<DonationDto>
+            {
+                StatusCode = HttpStatusCodess.OK,
+                Status = true,
+                Message = "Donación encontrada",
+                Data = MappersDonaciones.EntitytoDtoDonation(donationEntity)
+            };
+        }
+
+        
     }
 }

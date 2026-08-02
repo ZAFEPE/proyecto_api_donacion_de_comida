@@ -22,7 +22,7 @@ namespace API_DONACIONES.Controllers
         public async Task<ActionResult<ResponseDto<DonorWithDonationDto>>> GetOne(string id)
         {
             var donorResponse = await _Donorservice.GetOneByIdDonorAsync(id);
-            var donationResponse = await _Donationservice.GetOneByIdDonationAsync(id);
+            var donationResponse = await _Donationservice.GetByDonorIdAsync(id);
 
             var combinedData = new DonorWithDonationDto
             {
