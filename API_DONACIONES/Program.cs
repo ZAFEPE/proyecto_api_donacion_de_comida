@@ -1,4 +1,5 @@
 using API_DONACIONES.DataBase;
+using API_DONACIONES.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -13,10 +14,19 @@ builder.Services.AddDbContext<DonacionesDbContext>(options =>
 
 builder.Services.AddControllers();
 
+// Registrar la interfaz y su clase correspondiente
+builder.Services.AddScoped<IDonorService, DonorService>();
+builder.Services.AddScoped<IDonationService, DonationService>();
 
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DonacionesDbContext>();
+    context.Database.EnsureCreated(); // <--- Crea el archivo .db y sus tablas
+}
 
 if (app.Environment.IsDevelopment()) 
 {
@@ -28,6 +38,7 @@ if (app.Environment.IsDevelopment())
         options.Theme = ScalarTheme.Purple; 
     });
 }
+
 
 app.UseHttpsRedirection();
 

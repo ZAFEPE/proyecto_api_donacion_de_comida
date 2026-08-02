@@ -1,67 +1,76 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API_DONACIONES.Dtos;
 using API_DONACIONES.Codes;
 using API_DONACIONES.DataBase;
 using API_DONACIONES.Mappers;
 using Microsoft.EntityFrameworkCore;
 using API_DONACIONES.Entities;
+
 namespace API_DONACIONES.Services
 {
-    public class DonationService
+    public class DonationService : IDonationService
     {
-       private readonly DonacionesDbContext _contextD;//esta variable es un puente con la base de datos
+        private readonly DonacionesDbContext _contextD;
+
         public DonationService(DonacionesDbContext context)
         {
-            _contextD = context;//context se crea en Dbcontext 
+            _contextD = context;
         }
-        public async Task<ResponseDto<DonationDto>> GetOneByIdDonorAsync(string id)
+
+        // 1. Obtener donación por su ID
+        public async Task<ResponseDto<DonationDto>> GetOneByIdDonationAsync(string id)
         {
-            var donationEntity = await _contextD.Donations.FirstOrDefaultAsync(d => d.Id == id);//el donors es el que declaramos en dbcontext
+            var donationEntity = await _contextD.Donations.FirstOrDefaultAsync(d => d.Id == id);
+            
             if (donationEntity is null)
             {
                 return new ResponseDto<DonationDto>
                 {
                     Status = false,
-                    Message = "el donante no se ncontrado",
+                    Message = "La donación no fue encontrada",
                     StatusCode = HttpStatusCodess.NOT_FOUND
                 };
             }
+
             return new ResponseDto<DonationDto>
             {
                 StatusCode = HttpStatusCodess.OK,
                 Status = true,
-                Message = "Donante encontraddo",
-                Data = MappersDonaciones.EntitytoDtoDonation(donationEntity)//?tambien cambair esto
+                Message = "Donación encontrada",
+                Data = MappersDonaciones.EntitytoDtoDonation(donationEntity)
             };
         }
-        public async Task<ResponseDto<ResponseDonorDto>> CreateDonationAsync(CreateDonationDto dto,string donorId)
+
+        // 2. Crear una donación asociada a un DonorId
+        public async Task<ResponseDto<DonationDto>> CreateDonationAsync(CreateDonationDto dto, string donorId)
         {
-            var DonationRegistrado = await _contextD.Donations
-            .FirstOrDefaultAsync(c => c.NameFood == dto.NameFood);
-            if (DonationRegistrado is not null)
+            // Opcional: Verificar que el donante al que se le va a asignar la donación realmente exista
+            var donorExists = await _contextD.Donors.AnyAsync(d => d.Id == donorId);
+            if (!donorExists)
             {
-                return new ResponseDto<ResponseDonorDto>
+                return new ResponseDto<DonationDto>
                 {
-                    StatusCode = HttpStatusCodess.BAD_REQUEST,
+                    StatusCode = HttpStatusCodess.NOT_FOUND,
                     Status = false,
-                    Message = $"La categorìa {dto.NameFood} ya se encuentra registrada."
+                    Message = $"El donante con ID {donorId} no existe."
                 };
             }
-            DonationEntity entity = MappersDonaciones.CreateMapperDonation(dto,donorId);//? error raro
+
+            // Convertir DTO a Entidad
+            DonationEntity entity = MappersDonaciones.CreateMapperDonation(dto, donorId);
+
+            // Guardar en Base de Datos
             _contextD.Donations.Add(entity);
             await _contextD.SaveChangesAsync();
-            return new ResponseDto<ResponseDonorDto>//esto tambien hay que verlo+
+
+            // Mapear la entidad guardada a DonationDto para devolver la respuesta
+            var resultDto = MappersDonaciones.EntitytoDtoDonation(entity);
+
+            return new ResponseDto<DonationDto>
             {
                 StatusCode = HttpStatusCodess.CREATED,
                 Status = true,
-                Message = "Se registro el donante",
-                Data  = new ResponseDonorDto//?REVISAr ESTO
-              {
-                  Id = entity.Id
-              }
+                Message = "Donación registrada correctamente",
+                Data = resultDto
             };
         } 
     }
