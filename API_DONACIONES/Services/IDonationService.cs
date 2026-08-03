@@ -11,5 +11,7 @@ namespace API_DONACIONES.Services
      Task<ResponseDto<DonationDto>> GetOneByIdDonationAsync(string id);
      Task<ResponseDto<DonationDto>> CreateDonationAsync(CreateDonationDto dto, string donorId);
      Task<ResponseDto<DonationDto>> GetByDonorIdAsync(string donorId);
+     Task<bool> DeleteDonationAsync(string id);
+    Task<ResponseDto<List<DonationDto>>> GetAllDonationAsync();
     }
 }

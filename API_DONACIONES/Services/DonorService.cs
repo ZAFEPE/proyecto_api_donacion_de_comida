@@ -9,18 +9,15 @@ namespace API_DONACIONES.Services
 {
     public class DonorService : IDonorService
     {
-        private readonly DonacionesDbContext _context;
+        private readonly DonacionesDbContext _contextD;
 
         public DonorService(DonacionesDbContext context)
         {
-            _context = context;
+            _contextD = context;
         }
 
-        // 1. Crear un Donante
         public async Task<ResponseDto<DonorDto>> CreateAsync(DonorDto dto)
         {
-
-            // Mapear a entidad
             var donorEntity = new DonorEntity
             {
   
@@ -33,8 +30,8 @@ namespace API_DONACIONES.Services
 
             };
 
-            await _context.Donors.AddAsync(donorEntity);
-            await _context.SaveChangesAsync();
+            await _contextD.Donors.AddAsync(donorEntity);
+            await _contextD.SaveChangesAsync();
 
             dto.Id = donorEntity.Id;
 
@@ -47,10 +44,9 @@ namespace API_DONACIONES.Services
             };
         }
 
-        // Obtener Donante por ID
         public async Task<ResponseDto<DonorDto>> GetOneByIdDonorAsync(string id)
         {
-            var donorEntity = await _context.Donors.FirstOrDefaultAsync(d => d.Id == id);
+            var donorEntity = await _contextD.Donors.FirstOrDefaultAsync(d => d.Id == id);
             
             if (donorEntity is null)
             {
@@ -69,6 +65,47 @@ namespace API_DONACIONES.Services
                 Message = "Donante encontrado",
                 Data = MappersDonaciones.EntitytoDtoDonor(donorEntity)
             };
+        }
+
+         public async Task<ResponseDto<bool>> DeleteDonorAsync(string id)
+        {
+            var donor = await _contextD.Donors.FindAsync(id);
+            if (donor == null)
+            {
+                return new ResponseDto<bool> 
+                { 
+                    Status = false, 
+                    StatusCode = HttpStatusCodess.NOT_FOUND, 
+                    Message = "Donante no encontrado" 
+                };
+            }
+
+            // 1. Buscamos y eliminamos las donaciones asociadas a este donante primero
+            var relatedDonations = _contextD.Donations.Where(d => d.DonorId == id);
+            _contextD.Donations.RemoveRange(relatedDonations);
+
+            // 2. Ahora sí eliminamos al donante
+            _contextD.Donors.Remove(donor);
+            await _contextD.SaveChangesAsync();
+
+            return new ResponseDto<bool> 
+            { 
+                Status = true, 
+                StatusCode = HttpStatusCodess.OK, 
+                Message = "Donante y sus donaciones eliminados correctamente" 
+            };
+        }
+
+        public async Task<ResponseDto<List<DonorDto>>> GetAllDonorAsync()
+        {
+          var donorEntities = await _contextD.Donors.ToListAsync();
+          return new ResponseDto<List<DonorDto>>
+          {
+            Status = true,
+            StatusCode = HttpStatusCodess.OK,
+            Message = "Donantes encontrados",
+            Data = donorEntities.Select(MappersDonaciones.EntitytoDtoDonor).ToList()
+          };
         }
     }
 }

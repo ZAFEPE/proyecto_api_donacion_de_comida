@@ -8,7 +8,9 @@ namespace API_DONACIONES.Services
     public interface IDonorService
     {
     Task<ResponseDto<DonorDto>> GetOneByIdDonorAsync(string id);
-    // Task<ResponseDto<ResponseDonorDto>> CreateDonorAsync(CreateDonorDto dto);
     Task<ResponseDto<DonorDto>> CreateAsync(DonorDto dto);
+    Task<ResponseDto<bool>> DeleteDonorAsync(string id);
+    Task<ResponseDto<List<DonorDto>>> GetAllDonorAsync();
+    
     }
 }

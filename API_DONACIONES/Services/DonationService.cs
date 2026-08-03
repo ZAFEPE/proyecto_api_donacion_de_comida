@@ -16,7 +16,6 @@ namespace API_DONACIONES.Services
             _contextD = context;
         }
 
-        // 1. Obtener donación por su ID
         public async Task<ResponseDto<DonationDto>> GetOneByIdDonationAsync(string id)
         {
             var donationEntity = await _contextD.Donations.FirstOrDefaultAsync(d => d.Id == id);
@@ -40,10 +39,8 @@ namespace API_DONACIONES.Services
             };
         }
 
-        // 2. Crear una donación asociada a un DonorId
         public async Task<ResponseDto<DonationDto>> CreateDonationAsync(CreateDonationDto dto, string donorId)
         {
-            // Opcional: Verificar que el donante al que se le va a asignar la donación realmente exista
             var donorExists = await _contextD.Donors.AnyAsync(d => d.Id == donorId);
             if (!donorExists)
             {
@@ -55,14 +52,10 @@ namespace API_DONACIONES.Services
                 };
             }
 
-            // Convertir DTO a Entidad
             DonationEntity entity = MappersDonaciones.CreateMapperDonation(dto, donorId);
-
-            // Guardar en Base de Datos
             _contextD.Donations.Add(entity);
             await _contextD.SaveChangesAsync();
 
-            // Mapear la entidad guardada a DonationDto para devolver la respuesta
             var resultDto = MappersDonaciones.EntitytoDtoDonation(entity);
 
             return new ResponseDto<DonationDto>
@@ -97,6 +90,29 @@ namespace API_DONACIONES.Services
             };
         }
 
-        
+        public async Task<bool> DeleteDonationAsync(string id)
+        {
+          var donation = await _contextD.Donations.FirstOrDefaultAsync(c => c.Id == id);
+
+          if (donation is null)
+          {
+            return false;
+          }
+          _contextD.Donations.Remove(donation);
+          await _contextD.SaveChangesAsync();
+          return true;
+        } 
+
+        public async Task<ResponseDto<List<DonationDto>>> GetAllDonationAsync()
+        {
+          var donationEntities = await _contextD.Donations.ToListAsync();
+          return new ResponseDto<List<DonationDto>>
+          {
+            Status = true,
+            StatusCode = HttpStatusCodess.OK,
+            Message = "Donaciones encontradas",
+            Data = donationEntities.Select(MappersDonaciones.EntitytoDtoDonation).ToList()
+          };
+        }
     }
 }
