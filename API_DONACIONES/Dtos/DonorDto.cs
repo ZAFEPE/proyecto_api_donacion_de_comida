@@ -12,6 +12,6 @@ namespace API_DONACIONES.Dtos
         public string? DNI { get; set; }
         public string? ContactNumber { get; set; } 
         public string? Email { get; set; }
-        public bool IsActive {get; set;} = true;
+
     }
 }

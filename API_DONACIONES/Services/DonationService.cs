@@ -114,5 +114,36 @@ namespace API_DONACIONES.Services
             Data = donationEntities.Select(MappersDonaciones.EntitytoDtoDonation).ToList()
           };
         }
+        public async Task<ResponseDto<DonationDto>> UpdateDonationAsync(string id, UpdateDonationDto dto)
+        {
+            var donation = await _contextD.Donations.FindAsync(id);
+            if (donation == null)
+            {
+                return new ResponseDto<DonationDto>
+                {
+                    Status = false,
+                    StatusCode = HttpStatusCodess.NOT_FOUND,
+                    Message = $"No se encontró el donante con ID {id}"
+                };
+            }
+
+            donation.Description = dto.Description;
+            donation.DonationDate = dto.DonationDate;
+            donation.ExpirationDate = dto.ExpirationDate;
+            donation.NameFood = dto.NameFood;
+            donation.NeedsRefrigeration = dto.NeedsRefrigeration;
+            donation.Quantity = dto.Quantity;
+
+            _contextD.Donations.Update(donation);
+            await _contextD.SaveChangesAsync();
+
+            return new ResponseDto<DonationDto>
+            {
+                Status = true,
+                StatusCode = HttpStatusCodess.OK,
+                Message = "Donante actualizado correctamente",
+                Data = MappersDonaciones.EntitytoDtoDonation(donation)
+            };
+        }
     }
 }

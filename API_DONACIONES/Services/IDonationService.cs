@@ -13,5 +13,6 @@ namespace API_DONACIONES.Services
      Task<ResponseDto<DonationDto>> GetByDonorIdAsync(string donorId);
      Task<bool> DeleteDonationAsync(string id);
     Task<ResponseDto<List<DonationDto>>> GetAllDonationAsync();
+    Task<ResponseDto<DonationDto>> UpdateDonationAsync(string id, UpdateDonationDto dto);
     }
 }

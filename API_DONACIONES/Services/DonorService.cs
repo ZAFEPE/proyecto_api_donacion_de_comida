@@ -80,11 +80,9 @@ namespace API_DONACIONES.Services
                 };
             }
 
-            // 1. Buscamos y eliminamos las donaciones asociadas a este donante primero
             var relatedDonations = _contextD.Donations.Where(d => d.DonorId == id);
             _contextD.Donations.RemoveRange(relatedDonations);
 
-            // 2. Ahora sí eliminamos al donante
             _contextD.Donors.Remove(donor);
             await _contextD.SaveChangesAsync();
 
@@ -107,5 +105,36 @@ namespace API_DONACIONES.Services
             Data = donorEntities.Select(MappersDonaciones.EntitytoDtoDonor).ToList()
           };
         }
+        public async Task<ResponseDto<DonorDto>> UpdateDonorAsync(string id, UpdateDonorDto dto)
+        {
+            var donor = await _contextD.Donors.FindAsync(id);
+            if (donor == null)
+            {
+                return new ResponseDto<DonorDto>
+                {
+                    Status = false,
+                    StatusCode = HttpStatusCodess.NOT_FOUND,
+                    Message = $"No se encontró el donante con ID {id}"
+                };
+            }
+
+            donor.DonorType = dto.DonorType;
+            donor.Name = dto.Name;
+            donor.DNI = dto.DNI;
+            donor.ContactNumber = dto.ContactNumber;
+            donor.Email = dto.Email;
+
+            _contextD.Donors.Update(donor);
+            await _contextD.SaveChangesAsync();
+
+            return new ResponseDto<DonorDto>
+            {
+                Status = true,
+                StatusCode = HttpStatusCodess.OK,
+                Message = "Donante actualizado correctamente",
+                Data = MappersDonaciones.EntitytoDtoDonor(donor)
+            };
+        }
+        
     }
 }

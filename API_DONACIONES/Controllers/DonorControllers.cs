@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using API_DONACIONES.Services;
 using API_DONACIONES.Dtos;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.AspNetCore.Http.HttpResults;
 namespace API_DONACIONES.Controllers
 {   
     [ApiController]
@@ -18,7 +16,7 @@ namespace API_DONACIONES.Controllers
             _Donationservice = donationService;
         }
 
-        [HttpGet("{id}/Get Id")]
+        [HttpGet("{id}/GetId")]
         public async Task<ActionResult<ResponseDto<DonorWithDonationDto>>> GetOne(string id)
         {
             var donorResponse = await _Donorservice.GetOneByIdDonorAsync(id);
@@ -37,14 +35,14 @@ namespace API_DONACIONES.Controllers
             });
         }
 
-        [HttpPost("Post Donor")]
+        [HttpPost("PostDonor")]
         public async Task<ActionResult<ResponseDto<DonorDto>>> CreateDonor([FromBody] DonorDto dto)
         {
             var response = await _Donorservice.CreateAsync(dto);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPost("{donorId}/ Post Donation")]
+        [HttpPost("{donorId}/PostDonation")]
         public async Task<ActionResult<ResponseDto<DonationDto>>> CreateDonationForDonor(
             string donorId, 
             [FromBody] CreateDonationDto dto)
@@ -53,7 +51,22 @@ namespace API_DONACIONES.Controllers
             var response = await _Donationservice.CreateDonationAsync(dto, donorId);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpDelete("{id}/Delete Donation")] 
+
+        [HttpPut("{id}/UpdateDonor")]
+        public async Task<ActionResult<ResponseDto<DonorDto>>> UpdateDonor(string id, [FromBody] UpdateDonorDto dto)
+        {
+            var response = await _Donorservice.UpdateDonorAsync(id, dto);
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpPut("{id}/UpdateDonation")]
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseDto<DonationDto>>> UpdateDonation(string id, [FromBody] UpdateDonationDto dto)
+        {
+            var response = await _Donationservice.UpdateDonationAsync(id, dto);
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("{id}/DeleteDonation")] 
         public async Task<IActionResult> DeleteDonation( string id )
         {
             var isDeleted = await _Donationservice.DeleteDonationAsync(id);
@@ -63,10 +76,10 @@ namespace API_DONACIONES.Controllers
             }
             return Ok();
         }
-        [HttpDelete("{id}/Delete Donor")] 
+        [HttpDelete("{id}/DeleteDonor")] 
         public async Task<IActionResult> DeleteDonor( string id )
         {
-            var isDeleted = await _Donorservice.DeleteDonorAsync(id);// nomas llamo al status pa que si pueda evaluar si fue eliminada o no
+            var isDeleted = await _Donorservice.DeleteDonorAsync(id);//nomas llamo al status pa que si pueda evaluar si fue eliminada o no
             if (!isDeleted.Status)
             {
              return NotFound(new { message = $"No se encontró el donador con el ID {id}" });
@@ -74,14 +87,14 @@ namespace API_DONACIONES.Controllers
             return Ok();
         }
 
-        [HttpGet("All Donors")]
+        [HttpGet("AllDonors")]
         public async Task<IActionResult> GetAllDonors()
         {
          var allDonors = await _Donorservice.GetAllDonorAsync();
          return StatusCode(allDonors.StatusCode, allDonors);
         }
 
-        [HttpGet("All donations")]
+        [HttpGet("AllDonations")]
         public async Task<IActionResult> GetAllDonations()
         {
           var allDonations= await _Donationservice.GetAllDonationAsync();
