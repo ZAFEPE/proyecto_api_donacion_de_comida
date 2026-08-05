@@ -31,12 +31,7 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment()) 
 {
     app.MapOpenApi();
-    
-    app.MapScalarApiReference(options =>
-    {
-        options.Title = "API Donaciones";
-        options.Theme = ScalarTheme.Purple; 
-    });
+    app.MapScalarApiReference();
 }
 
 

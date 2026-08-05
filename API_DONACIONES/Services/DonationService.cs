@@ -117,7 +117,7 @@ namespace API_DONACIONES.Services
         public async Task<ResponseDto<DonationDto>> UpdateDonationAsync(string id, UpdateDonationDto dto)
         {
             var donation = await _contextD.Donations.FindAsync(id);
-            if (donation == null)
+            if (donation is null)
             {
                 return new ResponseDto<DonationDto>
                 {

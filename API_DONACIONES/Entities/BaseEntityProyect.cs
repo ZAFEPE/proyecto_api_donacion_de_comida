@@ -4,7 +4,7 @@ namespace API_DONACIONES.Entities
 {
     public class BaseEntityProyect
     {
-         [Key]
+        [Key]
         [Column("id")]
         public string? Id { get; set; }
 

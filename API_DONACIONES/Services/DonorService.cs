@@ -67,32 +67,19 @@ namespace API_DONACIONES.Services
             };
         }
 
-         public async Task<ResponseDto<bool>> DeleteDonorAsync(string id)
+          public async Task<bool> DeleteDonorAsync(string id)
         {
-            var donor = await _contextD.Donors.FindAsync(id);
-            if (donor == null)
-            {
-                return new ResponseDto<bool> 
-                { 
-                    Status = false, 
-                    StatusCode = HttpStatusCodess.NOT_FOUND, 
-                    Message = "Donante no encontrado" 
-                };
-            }
+          var donor = await _contextD.Donors.FirstOrDefaultAsync(c => c.Id == id);
 
-            var relatedDonations = _contextD.Donations.Where(d => d.DonorId == id);
-            _contextD.Donations.RemoveRange(relatedDonations);
-
-            _contextD.Donors.Remove(donor);
-            await _contextD.SaveChangesAsync();
-
-            return new ResponseDto<bool> 
-            { 
-                Status = true, 
-                StatusCode = HttpStatusCodess.OK, 
-                Message = "Donante y sus donaciones eliminados correctamente" 
-            };
-        }
+          if (donor is null)
+          {
+            return false;
+          }
+          _contextD.Donors.Remove(donor);
+          await _contextD.SaveChangesAsync();
+          return true;
+        } 
+        
 
         public async Task<ResponseDto<List<DonorDto>>> GetAllDonorAsync()
         {
@@ -108,7 +95,7 @@ namespace API_DONACIONES.Services
         public async Task<ResponseDto<DonorDto>> UpdateDonorAsync(string id, UpdateDonorDto dto)
         {
             var donor = await _contextD.Donors.FindAsync(id);
-            if (donor == null)
+            if (donor is null)
             {
                 return new ResponseDto<DonorDto>
                 {

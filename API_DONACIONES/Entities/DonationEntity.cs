@@ -6,8 +6,6 @@ namespace API_DONACIONES.Entities
     {
         [Column("donor_id")]
         public string? DonorId {get;set;}
-        [Column("DonationDate")]
-        public DonorEntity? Donor {get;set;}// est0 representa todo donor Entity waos
         [Column("donation_date")]
         public DateTime DonationDate {get;set;}
         [Column("type_food")]

@@ -59,7 +59,6 @@ namespace API_DONACIONES.Controllers
             return StatusCode(response.StatusCode, response);
         }
         [HttpPut("{id}/UpdateDonation")]
-        [HttpPut("{id}")]
         public async Task<ActionResult<ResponseDto<DonationDto>>> UpdateDonation(string id, [FromBody] UpdateDonationDto dto)
         {
             var response = await _Donationservice.UpdateDonationAsync(id, dto);
@@ -80,7 +79,7 @@ namespace API_DONACIONES.Controllers
         public async Task<IActionResult> DeleteDonor( string id )
         {
             var isDeleted = await _Donorservice.DeleteDonorAsync(id);//nomas llamo al status pa que si pueda evaluar si fue eliminada o no
-            if (!isDeleted.Status)
+            if (!isDeleted)
             {
              return NotFound(new { message = $"No se encontró el donador con el ID {id}" });
             }
